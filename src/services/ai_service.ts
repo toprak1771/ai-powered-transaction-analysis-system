@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { Transaction } from "src/types/ai.type";
 import { ConfigService } from "@nestjs/config";
 import { Injectable } from "@nestjs/common";
+import { CreateNormalizationAi } from "src/normalization/entities/normalization.entity";
 
 @Injectable()
 export class AIService {
@@ -19,7 +20,7 @@ export class AIService {
     });
   }
 
-  async normalizeTransaction(transaction: Transaction) {
+  async normalizeTransaction(transaction: Transaction):Promise<CreateNormalizationAi> {
     const prompt = `
           Normalize the following financial transaction and provide additional metadata:
       Description: ${transaction.description}
@@ -47,8 +48,9 @@ export class AIService {
         max_tokens: 1000,
         temperature: 0,
       });
-      console.log("response:",response);
-      console.log("response:", response.choices[0].message)
+      //console.log("response:",response);
+      console.log("response1:", typeof JSON.parse(response.choices[0].message.content))
+      return JSON.parse(response.choices[0].message.content);
     } catch (error: any) {
       // if (error.code === 'insufficient_quota') {
       //   console.error('Quota exceeded. Please check your billing details.');

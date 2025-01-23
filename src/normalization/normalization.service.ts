@@ -1,11 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { CreateNormalizationDto } from './dto/create-normalization.dto';
+import { CreateNormalizationServices } from './dto/create-normalization.dto';
+import { Prisma,Normalization, PrismaClient } from '@prisma/client';
 import { UpdateNormalizationDto } from './dto/update-normalization.dto';
+
 
 @Injectable()
 export class NormalizationService {
-  create(createNormalizationDto: CreateNormalizationDto) {
-    return 'This action adds a new normalization';
+  private prisma:PrismaClient;
+  public normalization:PrismaClient['normalization'];
+
+  constructor(prismaClient:PrismaClient){
+    this.prisma = prismaClient || new PrismaClient();
+    this.normalization = this.prisma.normalization;
+  }
+
+  async create(createNormalizationServices: CreateNormalizationServices):Promise<Normalization> {
+    const createdNormalization:Normalization = await this.normalization.create({
+      data:createNormalizationServices,
+    });
+    return createdNormalization;
   }
 
   findAll() {

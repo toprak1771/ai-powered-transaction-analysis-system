@@ -30,6 +30,7 @@ model Normalization {
   merchant String
   category String
   sub_category String
-  confidence String
+  confidence Float
+  is_subscription Boolean
   flags String[]
 }
