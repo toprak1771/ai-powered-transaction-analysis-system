@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { Transaction } from "src/types/ai.type";
+import { Transaction,ResultPatternDetection } from "src/types/ai.type";
 import { ConfigService } from "@nestjs/config";
 import { Injectable } from "@nestjs/common";
 import { CreateNormalizationAi } from "src/normalization/entities/normalization.entity";
@@ -48,7 +48,7 @@ export class AIService {
         max_tokens: 1000,
         temperature: 0,
       });
-      //console.log("response:",response);
+
       console.log("response1:", typeof JSON.parse(response.choices[0].message.content))
       return JSON.parse(response.choices[0].message.content);
     } catch (error: any) {
@@ -63,15 +63,15 @@ export class AIService {
 
   async detectPatternWithAI(transactions:any) {
     console.log("transactions:",transactions);
-    const patterns:any = [];
-  
+    const patterns:ResultPatternDetection[] = [];
+    
     for (const transaction of transactions) {
       const prompt = `
       Analyze the transaction and determine if it is recurring or one-time:
       Description: ${transaction.description}
       Amount: ${transaction.amount}
       Date: ${transaction.date}
-      Respond with: { "type": "<type>", "frequency": "<frequency>", "confidence": <confidence> }
+      Respond with: { "merchant":"<merchant>", "type": "<type>", "frequency": "<frequency>", "confidence": <confidence>, "next_excepted":"<next_excepted>" }
       `;
   
       const response = await this.openai.chat.completions.create({
@@ -81,13 +81,18 @@ export class AIService {
         temperature: 0,
       });
       console.log("response:",response.choices[0].message);
-      const result = JSON.parse(typeof response.choices[0].message === 'string' ? response.choices[0].message : "{}");
+      const result:ResultPatternDetection = JSON.parse(response.choices[0].message.content);
+      result.confidence = result.confidence / 100;
       console.log("result:",result);
-      if (result.type === "recurring") {
+      if (result.type === "subscription" && result.frequency === "recurring") {
         patterns.push({
           ...result,
-          next_expected: new Date(new Date(transaction.date).getTime() + 30 * 24 * 60 * 60 * 1000).toISOString(), // Örnek: aylık düzen
         });
+      } else {
+        delete result.next_excepted;
+        patterns.push({
+          ...result
+        })
       }
     }
     console.log("patterns:",patterns);

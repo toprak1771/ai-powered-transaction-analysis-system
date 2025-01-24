@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { PatternDetectionService } from './pattern_detection.service';
-import { CreatePatternDetectionDto,CreatePatternDetectionTransactionsDto } from './dto/create-pattern_detection.dto';
+import { CreatePatternDetectionTransactionsDto } from './dto/create-pattern_detection.dto';
 import { UpdatePatternDetectionDto } from './dto/update-pattern_detection.dto';
 import { AIService } from 'src/services/ai_service';
 
@@ -9,10 +9,10 @@ export class PatternDetectionController {
   constructor(private readonly patternDetectionService: PatternDetectionService,private readonly aiService:AIService) {}
 
   @Post()
-  async create(@Body() createPatternDetectionDto: CreatePatternDetectionTransactionsDto) {
-    console.log("createPatternDetectionDto:",createPatternDetectionDto);
-    const patterns = await this.aiService.detectPatternWithAI(createPatternDetectionDto.transactions);
-    console.log("patterns:",patterns);
+  async create(@Body() CreatePatternDetectionTransactionsDto: CreatePatternDetectionTransactionsDto) {
+    console.log("CreatePatternDetectionTransactionsDto:",CreatePatternDetectionTransactionsDto);
+    const patterns = await this.aiService.detectPatternWithAI(CreatePatternDetectionTransactionsDto.transactions);
+    //console.log("patterns:",patterns);
     //return this.patternDetectionService.create(createPatternDetectionDto);
   }
 
