@@ -34,3 +34,14 @@ model Normalization {
   is_subscription Boolean
   flags String[]
 }
+
+model DetectedPatterns {
+  id Int @id @default(autoincrement())
+  merchant String
+  amount Float
+  type String
+  frequency String
+  confidence Float
+  next_excepted String?
+  detail String?
+}

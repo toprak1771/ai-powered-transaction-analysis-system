@@ -1,4 +1,4 @@
-import multer, { StorageEngine } from "multer";
+import multer, { StorageEngine,diskStorage } from "multer";
 import { MulterInterface } from "./interfaces/multer.interface";
 import * as path from "path";
 import * as fs from "fs";
@@ -18,7 +18,7 @@ export class Multer implements MulterInterface {
     storageFile(subPath: string): StorageEngine {
         const outputPath = path.join(this.uploadFilePath,subPath);
         this.fsCreateModule(outputPath)
-        return multer.diskStorage({
+        return diskStorage({
             destination(
                 req:Request,
                 file:Express.Multer.File,
