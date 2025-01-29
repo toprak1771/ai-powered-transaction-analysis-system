@@ -19,7 +19,7 @@ import { CreateNormalizationAi } from "./entities/normalization.entity";
 import { AIService } from "src/services/ai_service";
 import { Normalization, Prisma, PrismaClient } from "@prisma/client";
 
-@Controller("normalization")
+@Controller("analyze")
 export class NormalizationController {
   private readonly _normalizationService: NormalizationService;
   constructor(
@@ -29,7 +29,7 @@ export class NormalizationController {
     this._normalizationService = new NormalizationService(new PrismaClient());
   }
 
-  @Post()
+  @Post('merchant')
   async create(
     @Body() createNormalizationDto: CreateNormalizationDto,
     @Req() request,
@@ -56,7 +56,7 @@ export class NormalizationController {
  
   }
 
-  @Get()
+  @Get("merchant")
   async findAll( @Req() request,
   @Res() res,
   @Next() next,):Promise<void> {
@@ -71,21 +71,4 @@ export class NormalizationController {
     }
   }
 
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.normalizationService.findOne(+id);
-  }
-
-  @Patch(":id")
-  update(
-    @Param("id") id: string,
-    @Body() updateNormalizationDto: UpdateNormalizationDto,
-  ) {
-    return this.normalizationService.update(+id, updateNormalizationDto);
-  }
-
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.normalizationService.remove(+id);
-  }
 }

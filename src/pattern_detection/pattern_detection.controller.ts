@@ -19,14 +19,14 @@ import { AIService } from "src/services/ai_service";
 import { ResultPatternDetection } from "src/types/ai.type";
 import { DetectedPatterns } from "@prisma/client";
 
-@Controller("pattern-detection")
+@Controller("analyze")
 export class PatternDetectionController {
   constructor(
     private readonly patternDetectionService: PatternDetectionService,
     private readonly aiService: AIService,
   ) {}
 
-  @Post()
+  @Post("patterns")
   async create(
     @Body()
     CreatePatternDetectionTransactionsDto: CreatePatternDetectionTransactionsDto,
@@ -51,7 +51,7 @@ export class PatternDetectionController {
     }
   }
 
-  @Get()
+  @Get("patterns")
   async findAll(@Req() request, @Res() res, @Next() next): Promise<void> {
     try {
       const getAllDetectedPatterns: DetectedPatterns[] =
@@ -65,21 +65,4 @@ export class PatternDetectionController {
     }
   }
 
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.patternDetectionService.findOne(+id);
-  }
-
-  @Patch(":id")
-  update(
-    @Param("id") id: string,
-    @Body() updatePatternDetectionDto: UpdatePatternDetectionDto,
-  ) {
-    return this.patternDetectionService.update(+id, updatePatternDetectionDto);
-  }
-
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.patternDetectionService.remove(+id);
-  }
 }
