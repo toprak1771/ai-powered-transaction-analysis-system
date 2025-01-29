@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { PrismaClient, User } from "@prisma/client";
@@ -18,7 +18,8 @@ export class UserService {
       const createdUser: User = await this.user.create({ data: createUser });
       return createdUser;
     } catch (error: any) {
-      console.log("error:", error);
+      console.log("error:", error.message);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -26,17 +27,20 @@ export class UserService {
     return `This action returns all user`;
   }
 
-  async findOne():Promise<User> {
+  async findOne(): Promise<User> {
     try {
-      const getUser:User = (await this.user.findMany({
-        orderBy:{
-          createdAt:'desc'
-        }
-      }))[0];
-      
+      const getUser: User = (
+        await this.user.findMany({
+          orderBy: {
+            createdAt: "desc",
+          },
+        })
+      )[0];
+
       return getUser;
     } catch (error) {
-      console.log(error);
+      console.log("error:", error.message);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

@@ -9,6 +9,8 @@ import {
   Req,
   Res,
   Next,
+  HttpException,
+  HttpStatus,
 } from "@nestjs/common";
 import { NormalizationService } from "./normalization.service";
 import { CreateNormalizationDto } from "./dto/create-normalization.dto";
@@ -48,7 +50,8 @@ export class NormalizationController {
       message: "Successfully created normalization data.",
     });
     } catch (error:any) {
-      console.log("error:",error);
+      console.log("error:",error.message);
+      throw new HttpException(error.message,HttpStatus.BAD_REQUEST)
     }
  
   }
@@ -62,8 +65,9 @@ export class NormalizationController {
       return res.status(200).json({
         data:getAllNormalization
       })
-    } catch (error) {
-      console.log("error:",error);
+    } catch (error:any) {
+      console.log("error:",error.message);
+      throw new HttpException(error.message,HttpStatus.BAD_REQUEST)
     }
   }
 

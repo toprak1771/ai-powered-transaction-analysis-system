@@ -9,6 +9,8 @@ import {
   Req,
   Next,
   Res,
+  HttpException,
+  HttpStatus,
 } from "@nestjs/common";
 import { PatternDetectionService } from "./pattern_detection.service";
 import { CreatePatternDetectionTransactionsDto } from "./dto/create-pattern_detection.dto";
@@ -44,19 +46,22 @@ export class PatternDetectionController {
         data: createdPatterns,
       });
     } catch (error: any) {
-      console.log("error:", error);
+      console.log("error:", error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Get()
   async findAll(@Req() request, @Res() res, @Next() next): Promise<void> {
     try {
-      const getAllDetectedPatterns:DetectedPatterns[] = await this.patternDetectionService.findAll();
+      const getAllDetectedPatterns: DetectedPatterns[] =
+        await this.patternDetectionService.findAll();
       return res.status(200).json({
-        data:getAllDetectedPatterns
-      })
+        data: getAllDetectedPatterns,
+      });
     } catch (error) {
-      console.log("error:", error);
+      console.log("error:", error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 

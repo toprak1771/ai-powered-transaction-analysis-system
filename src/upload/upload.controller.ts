@@ -9,6 +9,8 @@ import {
   Req,
   Res,
   Next,
+  HttpException,
+  HttpStatus,
 } from "@nestjs/common";
 import { UploadService } from "./upload.service";
 import { CreateUploadDto } from "./dto/create-upload.dto";
@@ -97,7 +99,8 @@ export class UploadController {
         .json({ message: "Added csv file and detected patterns succesfully." });
       return;
     } catch (error: any) {
-      console.log("error:", error);
+      console.log("error:", error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 

@@ -9,6 +9,8 @@ import {
   Req,
   Res,
   Next,
+  HttpException,
+  HttpStatus,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -24,9 +26,9 @@ export class UserController {
     try {
       return this.userService.create(createUserDto);
     } catch (error) {
-      console.log("error:",error);
+      console.log("error:", error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
-    
   }
 
   @Get()
@@ -35,17 +37,17 @@ export class UserController {
   }
 
   @Get("/getBy")
-  async findOne(@Req() request, @Res() res, @Next() next):Promise<void> {
-    console.log("burda")
+  async findOne(@Req() request, @Res() res, @Next() next): Promise<void> {
+    console.log("burda");
     try {
-      const getUser:User = await this.userService.findOne();
+      const getUser: User = await this.userService.findOne();
       return res.status(200).json({
-        data:getUser
-      })
+        data: getUser,
+      });
     } catch (error) {
-      console.log("error:",error);
+      console.log("error:", error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
-    
   }
 
   @Patch(":id")

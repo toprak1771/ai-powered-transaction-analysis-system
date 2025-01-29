@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CreateNormalizationServices } from "./dto/create-normalization.dto";
 import { Normalization, PrismaClient } from "@prisma/client";
 import { UpdateNormalizationDto } from "./dto/update-normalization.dto";
@@ -23,7 +23,8 @@ export class NormalizationService {
         });
       return createdNormalization;
     } catch (error: any) {
-      console.log("error:", error);
+      console.log("error:", error.message);
+      throw new HttpException(error.message,HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 
@@ -38,7 +39,8 @@ export class NormalizationService {
 
       return createdNormalizationMany;
     } catch (error: any) {
-      console.log("error:", error);
+      console.log("error:", error.message);
+      throw new HttpException(error.message,HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 
@@ -48,7 +50,8 @@ export class NormalizationService {
         await this.normalization.findMany();
       return getAllNormalization;
     } catch (error: any) {
-      console.log("error:", error);
+      console.log("error:", error.message);
+      throw new HttpException(error.message,HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 
