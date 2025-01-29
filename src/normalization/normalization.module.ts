@@ -7,5 +7,6 @@ import { PrismaClient } from '@prisma/client';
 @Module({
   controllers: [NormalizationController],
   providers: [NormalizationService,AIService,PrismaClient],
+  exports: [NormalizationService]
 })
 export class NormalizationModule {}

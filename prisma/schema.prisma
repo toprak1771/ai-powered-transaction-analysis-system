@@ -42,6 +42,6 @@ model DetectedPatterns {
   type String
   frequency String
   confidence Float
-  next_excepted String?
+  next_expected String?
   detail String?
 }

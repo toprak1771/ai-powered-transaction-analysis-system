@@ -34,7 +34,8 @@ export class NormalizationController {
     @Res() res,
     @Next() next,
   ): Promise<void> {
-    const response: CreateNormalizationAi =
+    try {
+      const response: CreateNormalizationAi =
       await this.aiService.normalizeTransaction(createNormalizationDto);
 
     const createdNormalization: Normalization =
@@ -46,11 +47,24 @@ export class NormalizationController {
       data: createdNormalization,
       message: "Successfully created normalization data.",
     });
+    } catch (error:any) {
+      console.log("error:",error);
+    }
+ 
   }
 
   @Get()
-  findAll() {
-    return this.normalizationService.findAll();
+  async findAll( @Req() request,
+  @Res() res,
+  @Next() next,):Promise<void> {
+    try {
+      const getAllNormalization:Normalization[] = await this._normalizationService.findAll();
+      return res.status(200).json({
+        data:getAllNormalization
+      })
+    } catch (error) {
+      console.log("error:",error);
+    }
   }
 
   @Get(":id")
