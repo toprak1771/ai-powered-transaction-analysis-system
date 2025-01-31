@@ -7,9 +7,10 @@ import { CreateNormalizationAi,CreateNormalizationAiwithDesc } from "src/normali
 @Injectable()
 export class AIService {
   private openai: OpenAI;
-
+   
   constructor(private configService: ConfigService) {
-    const apiKey = this.configService.get<string>("OPEN_AI_KEY");
+    //const apiKey = this.configService.get<string>("OPEN_AI_KEY");
+    const apiKey = process.env.OPEN_AI_KEY;
     if (!apiKey) {
       throw new Error(
         "OpenAI API key is not defined in the environment variables.",
