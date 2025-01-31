@@ -6,7 +6,11 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 async function bootstrap() {
+
+
   const app = await NestFactory.create(AppModule);
+
+  console.log('OPEN_AI_KEY:', process.env.OPEN_AI_KEY ? 'Yüklendi' : 'Tanımsız');
 
   app.setGlobalPrefix('/api');
 
